@@ -1,1 +1,1 @@
-# Samarin
+# javaCore-Android-
