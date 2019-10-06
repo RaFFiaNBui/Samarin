@@ -1,14 +1,14 @@
-public class Robot  implements Wall, Treadmill{
+public class Robot {
 
     private String name;
-    private int maxDistanceRobot = 50;
-    private double maxHeightRobot = 0.5;
+    private int maxDistance = 50;
+    private double maxHeight = 0.5;
 
     //создаем конструктор
-    public Robot(String name, int maxDistanceRobot, double maxHeightRobot) {
+    public Robot(String name, int maxDistance, double maxHeight) {
         this.name = name;
-        this.maxDistanceRobot = maxDistanceRobot;
-        this.maxHeightRobot = maxHeightRobot;
+        this.maxDistance = maxDistance;
+        this.maxHeight = maxHeight;
     }
 
     //робот умеет прыгать и бегать
@@ -17,23 +17,5 @@ public class Robot  implements Wall, Treadmill{
     }
     public void isJump () {
         System.out.println(this.name + " прыгает");
-    }
-
-    //перегружаем методы преодоления припятсвий
-    @Override
-    public void run (int distance) {
-        if (maxDistanceRobot > distance) {
-            System.out.println(this.name + " пробежал");
-        } else {
-            System.out.println(this.name + " не пробежал");
-        }
-    }
-    @Override
-    public void jump (double height) {
-        if (maxHeightRobot > height) {
-            System.out.println(this.name + " перепрыгнул");
-        } else {
-            System.out.println(this.name + " не перепрыгнул");
-        }
     }
 }
