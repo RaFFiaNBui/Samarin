@@ -1,8 +1,8 @@
 public class Human implements Participant {
 
     private String name;
-    private int maxDistance = 100;
-    private double maxHeight = 1.8;
+    private int maxDistance;
+    private double maxHeight;
     private boolean isReady;
 
     //создаем конструктор
@@ -13,6 +13,7 @@ public class Human implements Participant {
         isReady = true;
     }
 
+    //переопределяем методы
     @Override
     public boolean isReady(){
         return isReady;

@@ -1,8 +1,8 @@
 public class Cat implements Participant{
 
     private String name;
-    private int maxDistance = 400;
-    private double maxHeight = 2.7;
+    private int maxDistance;
+    private double maxHeight;
     private boolean isReady;
 
     //создаем конструктор
@@ -13,6 +13,7 @@ public class Cat implements Participant{
         isReady = true;
     }
 
+    //переопределяем методы
     @Override
     public boolean isReady(){
         return isReady;
@@ -43,5 +44,4 @@ public class Cat implements Participant{
             System.out.println(this.name + " перепрыгнул " + height + " метров");
         }
     }
-
 }

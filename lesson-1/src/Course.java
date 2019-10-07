@@ -3,12 +3,14 @@ import java.sql.SQLOutput;
 public class Course {
 
     public Obstacle[] obstacles;
-    private boolean succes;
+    private boolean succes; //показатель успешности прохождения испытаний
 
+    //конструктор
     public Course(Obstacle... obstacles) {
         this.obstacles = obstacles;
     }
 
+    // метод прохождения испытания
     public void doAction(Team team) {
         succes = true;
         for (Participant participant: team.getParticipants()){
