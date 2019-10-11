@@ -34,7 +34,7 @@ public class Words {
             repeat.put(i, number == null ? 1 : number +1);
         }
         //выводим в консоль ключевые слова
-        System.out.println("Ключевые слова:");
+        System.out.println("Список уникальных слов:");
         for (Map.Entry<String, Integer> o : repeat.entrySet()){
             System.out.println(o.getKey());
         }
