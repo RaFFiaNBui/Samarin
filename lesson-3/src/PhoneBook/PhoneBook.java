@@ -1,18 +1,18 @@
 package PhoneBook;
 import java.util.HashMap;
 
-public class PhoneBook {
+class PhoneBook {
 
     //создаем переменную телефонной книги
     private HashMap<String, Contact> phoneBook;
 
     //конструктор
-    public PhoneBook() {
+    PhoneBook() {
         this.phoneBook = new HashMap<>();
     }
 
     //метод добавления контакта в телефонную книгу
-    public void add (String name, Integer number){
+    void add (String name, Integer number){
         Contact contact;
         if(phoneBook.containsKey(name)){
             contact = phoneBook.get(name);
@@ -27,10 +27,10 @@ public class PhoneBook {
     }
 
     //метод поиска контакта по фамилии
-    public void get (String name){
+    void get (String name){
         if(phoneBook.containsKey(name)){
             Contact contact = phoneBook.get(name);
-            contact.info(name);
+            contact.info();
         } else {
             System.out.println("Абонента '" + name + "' нет в списке");
         }
