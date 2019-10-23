@@ -10,6 +10,7 @@ public class SwingChat {
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("MySwingChat");
+        frame.setBounds(500,300, 600, 300);
         frame.setContentPane(new SwingChat().panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
@@ -22,6 +23,7 @@ public class SwingChat {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
+                System.out.println("CloseByMenu");
             }
         });
         frame.setJMenuBar(menuBar);
@@ -29,7 +31,7 @@ public class SwingChat {
         fileMenu.add(exitMenuItem);
     }
 
-    public SwingChat() {
+    private SwingChat() {
         DefaultListModel listModel = new DefaultListModel();
         list1.setModel(listModel);
 
