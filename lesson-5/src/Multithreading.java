@@ -53,6 +53,15 @@ public class Multithreading {
         thread1.start();
         thread2.start();
 
+        try {
+            thread1.join();
+            thread2.join();
+        } catch (InterruptedException e) {
+            System.err.println("Упс! Кто-то прервал выполнение!");
+            e.printStackTrace();
+            return;
+        }
+
         //склейваем 2 массива в один
         System.arraycopy(array1, 0, array, 0, HALF);
         System.arraycopy(array2, 0, array, HALF, HALF);
