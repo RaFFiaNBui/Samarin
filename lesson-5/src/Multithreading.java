@@ -1,58 +1,75 @@
 import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.HashMap;
 
-public class Multithreading implements Runnable{
+public class Multithreading {
 
     private static final int SIZE = 10000000;
     private static final int HALF = SIZE / 2;
-    private static float[] arr = new float[SIZE];
 
     public static void main(String[] args) {
-        inCourse();
-        twoThreads();
+        float[] arrayInCourse = arrayTo1(SIZE);
+        timeMeasurement(new Runnable() {
+            @Override
+            public void run() {
+                inCourse(arrayInCourse, 0);
+            }
+        }, "inCourse");
+        float[] arrayTwoThreads = arrayTo1(SIZE);
+
+        System.out.println("Массивы одинаковые - " + Arrays.equals(arrayInCourse, arrayTwoThreads));
     }
 
-    //переопределяем метод run() интерфейса Runnable
-    @Override
-    public void run() {
-        for (int i = 0; i < SIZE; i++) {
-            arr[i] = (float)(arr[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) * Math.cos(0.4f + i / 2));
-        }
-    }
 
     //общий метод наполнения массива еденицами
-    private static void arrayTo1() {
-        for (int i = 0; i < SIZE; i++) {
-            arr[i] = 1;
+    private static float[] arrayTo1(int size) {
+        float[] array = new float[size];
+        for (int i = 0; i < size; i++) {
+            array[i] = 1;
         }
+        return array;
     }
 
     //метод расчета одним потоком
-    private static void inCourse () {
-        arrayTo1();
-        long a = System.currentTimeMillis();
-        for (int i = 0; i < SIZE; i++) {
-            arr[i] = (float)(arr[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) * Math.cos(0.4f + i / 2));
+    private static void inCourse (float[] arr, int offset){
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = formula(i + offset, arr[i]);
         }
-        System.out.println("Время работы метода inCourse - " + (System.currentTimeMillis() - a));
+    }
+    private static float formula(int index,float value){
+        return (float)(value * Math.sin(0.2f + index / 5.0) * Math.cos(0.2f + index / 5.0) * Math.cos(0.4f + index / 2.0));
     }
 
     //метод расчета в 2 потока
-    private static void twoThreads () {
-        arrayTo1();
+    private static void twoThreads (float[] array) {
+        float[] array1 = new float[HALF];
+        float[] array2 = new float[HALF];
+        System.arraycopy(array, 0, array1, 0, HALF);
+        System.arraycopy(array, HALF, array2, 0, HALF);
+
+        Thread thread1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                inCourse(array1,0);
+            }
+        });
+        Thread thread2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                inCourse(array2,HALF);
+            }
+        });
+
+        thread1.start();
+        thread2.start();
+
+        System.arraycopy(array1, 0, array, 0, HALF);
+        System.arraycopy(array2, 0, array, HALF, HALF);
+    }
+
+    private static void timeMeasurement (Runnable action, String methodName) {
         long a = System.currentTimeMillis();
-        //Деление масиива на 2 части
-        float[] arr1 = new float[HALF];
-        float[] arr2 = new float[HALF];
-        System.arraycopy(arr, 0, arr1, 0, HALF);
-        System.arraycopy(arr, HALF, arr2, 0, HALF);
-
-        //обход массивов 2 потоками
-        new Thread(new Multithreading()).start();
-        new Thread(new Multithreading()).start();
-
-        //обратная склейка массива
-        System.arraycopy(arr1, 0, arr, 0, HALF);
-        System.arraycopy(arr2, 0, arr, HALF, HALF);
-        System.out.println("Время работы метода twoThreads - " + (System.currentTimeMillis() - a));
+        action.run();
+        System.out.println( "Время работы метода " + methodName +" " + (System.currentTimeMillis()-a) + " милисекунд");
     }
 }
