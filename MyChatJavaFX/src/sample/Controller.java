@@ -13,8 +13,9 @@ public class Controller {
 
     @FXML
     public void enterInputText(ActionEvent e) {
-        String text = textArea.getText();
-        textArea.setText(text + "\n" + inPutText.getText());
+//        String text = textArea.getText();
+//        textArea.setText(text + "\n" + inPutText.getText());
+        textArea.appendText("\n" + inPutText.getText());
         inPutText.setText("");
     }
 }
