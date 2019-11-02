@@ -1,6 +1,5 @@
 package ru.controller;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -11,7 +10,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import ru.controller.message.ServerEchoMessageService;
+
+import ru.controller.message.ServerMessageService;
 import ru.controller.message.IMessageService;
 
 public class Controller implements Initializable {
@@ -25,28 +25,27 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //this.messageService = new MockMessageService(chatTextArea);
-        this.messageService = new ServerEchoMessageService(chatTextArea);
-
         try {
-            Network network = new Network("localhost", 8189, messageService);
-            ((ServerEchoMessageService)messageService).setNetwork(network);
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("Ошибкка соединения с сервером");
-            alert.setContentText(e.getMessage());
-            alert.show();
+            this.messageService = new ServerMessageService(chatTextArea, true);
+        } catch (Exception e) {
+            showError(e);
         }
+    }
+
+    private void showError(Exception e) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Ошибка соединения с сервером!");
+        alert.setHeaderText(e.getMessage());
+        alert.show();
     }
 
     @FXML
     public void sendText(ActionEvent actionEvent) {
-
         sendMessage();
     }
 
     @FXML
     public void sendMessage(ActionEvent actionEvent) {
-
         sendMessage();
     }
 
