@@ -6,12 +6,11 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
+import javafx.scene.layout.VBox;
 import ru.controller.message.ServerMessageService;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import ru.controller.message.IMessageService;
 
 public class Controller implements Initializable {
@@ -36,7 +35,23 @@ public class Controller implements Initializable {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Ошибка соединения с сервером!");
         alert.setHeaderText(e.getMessage());
-        alert.show();
+
+        VBox dialogPaneContent = new VBox();
+
+        Label label = new Label("Stack Trace:");
+
+        String stackTrace = ExceptionUtils.getStackTrace(e);
+        TextArea textArea = new TextArea();
+        textArea.setText(stackTrace);
+
+        dialogPaneContent.getChildren().addAll(label, textArea);
+
+        // Set content for Dialog Pane
+        alert.getDialogPane().setContent(dialogPaneContent);
+        alert.setResizable(true);
+        alert.showAndWait();
+
+        e.printStackTrace();
     }
 
     @FXML
