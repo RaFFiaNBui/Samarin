@@ -1,6 +1,7 @@
 package ru.controller.message;
 
 import javafx.scene.control.TextArea;
+import ru.controller.Controller;
 import ru.controller.Network;
 
 import java.io.IOException;
@@ -20,13 +21,13 @@ public class ServerMessageService implements IMessageService{
     private Network network;
     private boolean needStopServerOnClosed;
 
-    public ServerMessageService(TextArea chatTextArea, boolean needStopServerOnClosed) {
-        this.chatTextArea = chatTextArea;
+    public ServerMessageService(Controller controller, boolean needStopServerOnClosed) {
+        this.chatTextArea = controller.chatTextArea;
         this.needStopServerOnClosed = needStopServerOnClosed;
-        initialaze();
+        initialize();
     }
 
-    private void initialaze() {
+    private void initialize() {
         readProperties();
         startConnectionToServer();
     }
@@ -52,10 +53,6 @@ public class ServerMessageService implements IMessageService{
         }
     }
 
-    public void setNetwork (Network network) {
-        this.network = network;
-    }
-
     @Override
     public void sendMessage(String message) {
         network.send(message);
@@ -63,6 +60,14 @@ public class ServerMessageService implements IMessageService{
 
     @Override
     public void processRetrievedMessage(String message) {
-        chatTextArea.appendText(message + System.lineSeparator());
+        chatTextArea.appendText("Сервер: " + message + System.lineSeparator());
+    }
+
+    @Override
+    public void close() throws IOException {
+        if(needStopServerOnClosed) {
+            sendMessage(STOP_SERVER_COMMAND);
+        }
+        network.close();
     }
 }

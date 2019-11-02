@@ -25,7 +25,7 @@ public class Network {
                     String message = inputStream.readUTF();
                     Platform.runLater(() -> messageService.processRetrievedMessage(message));
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    e.printStackTrace(); //ВЫЛЕТАЕТ ОШИБКА ПРИ ЗАКРЫТИИ ПРИЛОЖЕНИЯ
                     break;
                 }
             }
@@ -38,5 +38,9 @@ public class Network {
         } catch (IOException e) {
             throw new RuntimeException("Ошибка отправки сообщения: " + message);
         }
+    }
+
+    public void close() throws IOException {
+        socket.close();
     }
 }

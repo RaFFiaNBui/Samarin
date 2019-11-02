@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import ru.controller.Controller;
 
 import java.io.IOException;
 
@@ -14,15 +15,14 @@ public class StartApp extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("/sample.fxml"));
         stage.setTitle("myJavaFXChat");
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/sample.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+
+        Controller controller = fxmlLoader.getController();
+        stage.setOnHidden(e -> controller.shutdown());
         stage.setScene(scene);
         stage.show();
-    }
-
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(StartApp.class.getResource(fxml));
-        return fxmlLoader.load();
     }
 
     public static void main(String[] args) {

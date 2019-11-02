@@ -1,5 +1,6 @@
 package ru.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -25,11 +26,12 @@ public class Controller implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //this.messageService = new MockMessageService(chatTextArea);
         try {
-            this.messageService = new ServerMessageService(chatTextArea, true);
+            this.messageService = new ServerMessageService(this, true);
         } catch (Exception e) {
             showError(e);
         }
     }
+
 
     private void showError(Exception e) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -66,7 +68,16 @@ public class Controller implements Initializable {
 
     private void sendMessage() {
         String message = messageText.getText();
+        chatTextArea.appendText("Клиент: " + message + System.lineSeparator());
         messageService.sendMessage(message);
         messageText.clear();
+    }
+
+    public void shutdown() {
+        try {
+            messageService.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
