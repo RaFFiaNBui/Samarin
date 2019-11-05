@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import ru.controller.message.ServerMessageService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -19,6 +20,12 @@ public class Controller implements Initializable {
     public @FXML TextArea chatTextArea;
     public @FXML TextField messageText;
     public @FXML Button sendMessageButton;
+    
+    public @FXML HBox authPanel;
+    public @FXML VBox chatPanel;
+    
+    public @FXML TextField loginField;
+    public @FXML PasswordField passField;
 
     private IMessageService messageService;
 
@@ -79,5 +86,11 @@ public class Controller implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendAuth(ActionEvent actionEvent) {
+        String login = loginField.getText();
+        String password = passField.getText();
+        messageService.sendMessage(String.format("/auth %s %s", login, password));
     }
 }

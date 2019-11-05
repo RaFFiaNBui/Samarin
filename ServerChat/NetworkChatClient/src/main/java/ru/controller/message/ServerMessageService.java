@@ -1,5 +1,6 @@
 package ru.controller.message;
 
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import ru.controller.Controller;
 import ru.controller.Network;
@@ -19,10 +20,12 @@ public class ServerMessageService implements IMessageService{
 
     private final TextArea chatTextArea;
     private Network network;
+    private Controller controller;
     private boolean needStopServerOnClosed;
 
     public ServerMessageService(Controller controller, boolean needStopServerOnClosed) {
         this.chatTextArea = controller.chatTextArea;
+        this.controller = controller;
         this.needStopServerOnClosed = needStopServerOnClosed;
         initialize();
     }
@@ -60,7 +63,17 @@ public class ServerMessageService implements IMessageService{
 
     @Override
     public void processRetrievedMessage(String message) {
-        chatTextArea.appendText("Сервер: " + message + System.lineSeparator());
+        if (message.startsWith("/authok")) {
+            controller.authPanel.setVisible(false);
+            controller.chatPanel.setVisible(true);
+        } else if (controller.authPanel.isVisible()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Authentication is failed");
+            alert.setContentText(message);
+            alert.showAndWait();
+        } else {
+            chatTextArea.appendText("Сервер: " + message + System.lineSeparator());
+        }
     }
 
     @Override
