@@ -11,8 +11,6 @@ import java.io.IOException;
 
 public class StartApp extends Application {
 
-    private static Scene scene;
-
     @Override
     public void start(Stage stage) throws IOException {
         stage.setTitle("myJavaFXChat");
