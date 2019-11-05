@@ -10,5 +10,5 @@ public interface IMessageService extends Closeable {
     void processRetrievedMessage(String message);
 
     @Override
-    default void close() throws IOException {};
+    default void close() throws IOException {}
 }
