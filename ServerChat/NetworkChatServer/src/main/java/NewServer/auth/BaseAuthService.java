@@ -1,5 +1,6 @@
 package NewServer.auth;
 
+
 import java.util.List;
 
 public class BaseAuthService implements AuthService {
@@ -9,7 +10,7 @@ public class BaseAuthService implements AuthService {
         private String password;
         private String nick;
 
-        public Entry(String login, String password, String nick) {
+        Entry(String login, String password, String nick) {
             this.login = login;
             this.password = password;
             this.nick = nick;

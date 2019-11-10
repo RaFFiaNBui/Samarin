@@ -1,5 +1,6 @@
 package NewServer.auth;
 
+
 import javax.annotation.Nullable;
 
 public interface AuthService {
