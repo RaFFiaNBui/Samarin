@@ -1,31 +1,50 @@
 package ru.controller;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import common.*;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import ru.controller.message.ServerMessageService;
+import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import ru.controller.message.IMessageService;
+import ru.controller.message.ServerMessageService;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import static common.Message.createAuth;
 
 public class Controller implements Initializable {
 
-    public @FXML TextArea chatTextArea;
-    public @FXML TextField messageText;
-    public @FXML Button sendMessageButton;
+    public static final String ALL_ITEM = "All";
+
+    public @FXML
+    TextArea chatTextArea;
+    public @FXML
+    TextField messageText;
+    public @FXML
+    Button sendMessageButton;
     
-    public @FXML HBox authPanel;
-    public @FXML VBox chatPanel;
+    public @FXML
+    HBox authPanel;
+    public @FXML
+    VBox chatPanel;
     
-    public @FXML TextField loginField;
-    public @FXML PasswordField passField;
+    public @FXML
+    TextField loginField;
+    public @FXML
+    PasswordField passField;
+    public @FXML
+    ListView<String> clientList;
+
+    private String nickname;
 
     private IMessageService messageService;
 
@@ -75,9 +94,20 @@ public class Controller implements Initializable {
 
     private void sendMessage() {
         String message = messageText.getText();
-        chatTextArea.appendText("Клиент: " + message + System.lineSeparator());
-        messageService.sendMessage(message);
-        messageText.clear();
+        if (StringUtils.isNotBlank(message)) {
+            chatTextArea.appendText(String.format("Я: %s%n", message));
+            Message msg = buildMessage(message);
+            messageService.sendMessage(msg);
+            messageText.clear();
+        }
+    }
+
+    private Message buildMessage(String message) {
+        String selectedNickname = clientList.getSelectionModel().getSelectedItem();
+        if (selectedNickname != null && !selectedNickname.equals(ALL_ITEM)) {
+            return Message.createPrivate(nickname, selectedNickname, message);
+        }
+        return Message.createPublic(nickname, message);
     }
 
     public void shutdown() {
@@ -88,9 +118,39 @@ public class Controller implements Initializable {
         }
     }
 
+    @FXML
     public void sendAuth(ActionEvent actionEvent) {
         String login = loginField.getText();
         String password = passField.getText();
-        messageService.sendMessage(String.format("/auth %s %s", login, password));
+        messageService.sendMessage(createAuth(login, password));
+    }
+
+    public void showChatPanel() {
+        authPanel.setVisible(false);
+        chatPanel.setVisible(true);
+    }
+
+    public void setNickName(String nickName) {
+        this.nickname = nickName;
+        refreshWindowTitle(nickName);
+    }
+
+    private void refreshWindowTitle(String nickName) {
+        Stage stage = (Stage) chatPanel.getScene().getWindow();
+        stage.setTitle(nickName);
+    }
+
+    public void showAuthError(String errorMsg) {
+        if (authPanel.isVisible()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Authentication is failed");
+            alert.setContentText(errorMsg);
+            alert.showAndWait();
+        }
+    }
+
+    public void refreshUsersList(List<String> onlineUserNicknames) {
+        onlineUserNicknames.add(ALL_ITEM);
+        clientList.setItems(FXCollections.observableArrayList(onlineUserNicknames));
     }
 }

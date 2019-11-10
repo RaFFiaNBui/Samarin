@@ -1,22 +1,24 @@
 package ru.controller;
 
+import common.Message;
 import javafx.application.Platform;
 import ru.controller.message.IMessageService;
 
+import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class Network {
+public class Network implements Closeable {
 
     private final String serverAddress;
     private final int port;
     private final IMessageService messageService;
 
-    private  Socket socket;
-    private  DataInputStream inputStream;
-    private  DataOutputStream outputStream;
+    private Socket socket;
+    private DataInputStream inputStream;
+    private DataOutputStream outputStream;
 
     public Network(String serverAddress, int port, IMessageService messageService) throws IOException {
         this.serverAddress = serverAddress;
@@ -29,21 +31,25 @@ public class Network {
         this.inputStream = new DataInputStream(socket.getInputStream());
         this.outputStream = new DataOutputStream(socket.getOutputStream());
 
-        new Thread(() -> {
-            while (true) {
-                try {
-                    String message = inputStream.readUTF();
-                    Platform.runLater(() -> messageService.processRetrievedMessage(message));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    break;
-                }
+        Thread readServerThread = new Thread(this::readMessagesFromServer);
+        readServerThread.setDaemon(true);
+        readServerThread.start();
+    }
+
+    private void readMessagesFromServer() {
+        while (true) {
+            try {
+                String message = inputStream.readUTF();
+                Message msg = Message.fromJson(message);
+                Platform.runLater(() -> messageService.processRetrievedMessage(msg));
+            } catch (Exception e) {
+                System.out.println("Server connection was disconnected!");
+                break;
             }
-        }).start();
+        }
     }
 
     public void send(String message) {
-
         try {
             if (outputStream == null) {
                 initNetworkState(serverAddress, port);
@@ -54,6 +60,7 @@ public class Network {
         }
     }
 
+    @Override
     public void close() throws IOException {
         socket.close();
     }

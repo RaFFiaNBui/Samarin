@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -27,7 +28,15 @@
       </HBox>
 <VBox fx:id="chatPanel" alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="5.0" style="-fx-background-color: silver; -fx-border-color: blue;" visible="false" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="2.0">
    <children>
-      <TextArea fx:id="chatTextArea" editable="false" prefHeight="344.0" prefWidth="560.0" style="-fx-border-color: blue; -fx-border-radius: 5; -fx-border-width: 1;" wrapText="true" />
+      <HBox>
+         <children>
+            <ListView fx:id="clientList" style="-fx-border-color: blue; -fx-border-radius: 5; -fx-border-width: 1;">
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin></ListView>
+            <TextArea fx:id="chatTextArea" editable="false" prefHeight="344.0" prefWidth="560.0" style="-fx-border-color: blue; -fx-border-radius: 5; -fx-border-width: 1;" wrapText="true" />
+         </children>
+      </HBox>
       <HBox spacing="10.0">
          <children>
             <TextField fx:id="messageText" onAction="#sendText" style="-fx-border-color: blue; -fx-border-radius: 5;" HBox.hgrow="ALWAYS" />
