@@ -1,3 +1,4 @@
+package ru.controller.message;/*
 package ru.controller.message;
 
 import javafx.scene.control.TextArea;
@@ -21,4 +22,7 @@ public class MockMessageService implements IMessageService {
     public void processRetrievedMessage(String message) {
         chatTextArea.appendText(message + System.lineSeparator());
     }
+
+
 }
+*/
