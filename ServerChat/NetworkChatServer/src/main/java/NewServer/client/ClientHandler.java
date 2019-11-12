@@ -64,9 +64,8 @@ public class ClientHandler {
     }
 
     private void closeConnection() {
-        System.out.println("I am here!!!!!!!!!!!!!!!!!!!!!!!");
         myServer.unsubscribe(this);
-        myServer.broadcastMessage(clientName + " is offline");
+        myServer.broadcastMessage(Message.createPublic(null, clientName + " is offline"));
         try {
             socket.close();
         } catch (IOException e) {
